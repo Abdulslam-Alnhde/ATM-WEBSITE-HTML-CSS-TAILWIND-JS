@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATM</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-white p-8 rounded shadow-md">
+    <h1 class="text-2xl text-center mb-4">ATM</h1>
+    <form id="loginForm">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="pin">PIN:</label>
+        <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="pin" type="password" placeholder="Enter your PIN" required>
+      </div>
+      <div class="flex items-center justify-between">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit">Log In</button>
+      </div>
+    </form>
+    <div id="balanceSection" class="hidden mt-8">
+      <h2 class="text-lg mb-2">Account Balance:</h2>
+      <p id="balance" class="text-xl font-bold"></p>
+      <form id="withdrawForm" class="mt-4">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">Withdraw Amount:</label>
+          <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="amount" type="number" placeholder="Enter amount" min="1" required>
+        </div>
+        <div class="flex items-center justify-between">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit">Withdraw</button>
+          <button id="logoutButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button">Log Out</button>
+        </div>
+      </form>
+      <form id="depositForm" class="mt-8">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="depositAmount">Deposit Amount:</label>
+          <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="depositAmount" type="number" placeholder="Enter amount" min="1" required>
+        </div>
+        <div class="flex items-center justify-between">
+          <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit">Deposit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Simulated ATM functionality
+    const PIN = "1234";
+    let balance = 1000;
+    let isLoggedIn = false;
+
+    const loginForm = document.getElementById("loginForm");
+    const withdrawForm = document.getElementById("withdrawForm");
+    const depositForm = document.getElementById("depositForm");
+    const balanceSection = document.getElementById("balanceSection");
+    const balanceElement = document.getElementById("balance");
+    const logoutButton = document.getElementById("logoutButton");
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const pinInput = document.getElementById("pin");
+      const pin = pinInput.value;
+
+      if (pin === PIN) {
+        isLoggedIn = true;
+        pinInput.value = "";
+        loginForm.style.display = "none";
+        balanceSection.style.display = "block";
+        updateBalance();
+      } else {
+        alert("Incorrect PIN. Please try again.");
+      }
+    });
+
+    withdrawForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const amountInput = document.getElementById("amount");
+      const amount = Number(amountInput.value);
+
+      if (amount > 0 && amount <= balance) {
+        balance -= amount;
+        amountInput.value = "";
+        updateBalance();
+        alert(`Successfully withdrew $${amount}`);
+      } else {
+        alert("Invalid amount. Please enter a valid amount.");
+      }
+    });
+
+    depositForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const depositAmountInput = document.getElementById("depositAmount");
+      const depositAmount = Number(depositAmountInput.value);
+
+      if (depositAmount > 0) {
+        balance += depositAmount;
+        depositAmountInput.value = "";
+        updateBalance();
+        alert(`Successfully deposited $${depositAmount}`);
+      } else {
+        alert("Invalid amount. Please enter a valid amount.");
+      }
+    });
+
+    logoutButton.addEventListener("click", () => {
+      isLoggedIn = false;
+      balanceSection.style.display = "none";
+      loginForm.style.display = "block";
+    });
+
+    function updateBalance() {
+      balanceElement.textContent = `$${balance}`;
+    }
+  </script>
+</body>
+
+</html>
